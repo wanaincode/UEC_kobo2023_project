@@ -1,6 +1,6 @@
 ### 画像認識技術を活用した冷蔵庫内食材自動判別システムの開発  
 - 情報処理第86回大会 学生奨励賞 受賞作品
-- AI Food Recognizer with GroundingDINO + SAM + CLIP
+- AI Food Recognizer with [GroundingDINO](https://github.com/IDEA-Research/GroundingDINO?tab=readme-ov-file) + [SAM](https://github.com/facebookresearch/segment-anything) + [CLIP](https://github.com/openai/CLIP)
 
 This project is the final work for the elective course **"情報工学工房 (Information Engineering Workshop)"** at **The University of Electro-Communications (電気通信大学)**, under the I-Class curriculum for Information Science students.
 
