@@ -5,5 +5,4 @@ segment-anything/
 *.jpeg
 *.pt
 *.pth
-.env.DS_Store
 .env
