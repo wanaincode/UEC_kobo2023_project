@@ -1,0 +1,8 @@
+GroundingDINO/
+segment-anything/
+.DS_Store
+*.jpg
+*.jpeg
+*.pt
+*.pth
+.env
