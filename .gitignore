@@ -1,10 +1,5 @@
-GroundingDINO/*
-!GroundingDINO/.gitmodules
-!GroundingDINO/.git
-
-segment-anything/*
-!segment-anything/.gitmodules
-!segment-anything/.git
+GroundingDINO/
+segment-anything/
 
 .DS_Store
 
