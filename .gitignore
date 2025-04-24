@@ -6,3 +6,4 @@ segment-anything/
 *.pt
 *.pth
 .env.DS_Store
+.env
