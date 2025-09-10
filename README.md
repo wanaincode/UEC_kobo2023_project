@@ -2,7 +2,8 @@
 ## 1. はじめに
 
 - 🏆 情報処理学会 第86回大会 学生奨励賞 受賞作品  
-- 電気通信大学「情報工学工房」最終プロジェクト  
+- 電気通信大学「情報工学工房」最終プロジェクト
+- 調布祭2023にて展示    
 
 ### 1.1 📹 デモ  
 [![デモを見る](https://img.youtube.com/vi/WM_rVHsI6sQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=WM_rVHsI6sQ)  
@@ -161,11 +162,12 @@ KOBO2023_project/
 
 # English Version
 
-# 画像認識技術を活用した冷蔵庫内食材自動判別システムの開発   
+# AI Food Recognizer: Refrigerator Ingredient Recognition System  
 ## 1. Intro
 
-- 🏆 情報処理学会 第86回大会 学生奨励賞 受賞作品  
+- 🏆 Student Encouragement Award at the 86th Annual Conference of the Information Processing Society of Japan (IPSJ)
 - Final project for **"情報工学工房 (Information Engineering Workshop)"**, The University of Electro-Communications (電気通信大学)  
+- Exhibited at Chofu Festival 2023
 
 
 ### 1.1 📹 Demo  
