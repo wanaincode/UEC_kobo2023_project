@@ -173,7 +173,6 @@ KOBO2023_project/
 ### 1.1 Demo  
 [![Watch the demo](https://img.youtube.com/vi/WM_rVHsI6sQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=WM_rVHsI6sQ)  
 
----
 
 ### 1.2 Project Info  
 - **Theme:** 「巨大モデルを使いこなせ！大規模深層学習モデルを活用した画像認識・生成」  
@@ -182,7 +181,6 @@ KOBO2023_project/
   - Junwen Chen (陳 俊文) – Teaching Assistant  
   - Prof. Keiji Yanai (柳井 啓司) – Faculty Advisor  
 
----
 
 ### 1.3 Overview  
 This project integrates multiple state-of-the-art vision and language models to detect, segment, and recognize food items in images, and optionally fetch their names and calorie information using the OpenAI API.
