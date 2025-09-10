@@ -87,7 +87,6 @@ Download checkpoints for:
 
 All scripts expect read/write under `data/` (created automatically on first run).
 
----
 
 ### 2. Usage  
 
@@ -126,13 +125,11 @@ KOBO2023_project/
 
 > Note: If you are running scripts directly from the repo root (not using `src/`), adjust the command accordingly (e.g., `python demo_ui.py`). All I/O paths are under the `data/` directory.
 
----
-
 ### 3. Running Recognition with `demo_ui.py` (GUI Version)
 
 This is the recommended way to run the pipeline interactively with visual feedback. The GUI uses your webcam.
 
-💡 **Quick Try (no preparation)**
+💡 **Quick Try (no preparation)**  
 You can try recognition immediately using the bundled sample features:
 
 ```bash
@@ -144,7 +141,7 @@ Then click **Recognize** in the right panel. The app will:
 
 A snapshot from the webcam will be saved to `data/test_img/test.jpg`, and annotated results will be written to `data/recognized_results/`.
 
-💡 **Register Your Own Objects (optional)**
+💡 **Register Your Own Objects (optional)**  
 1. Run the GUI:
    ```bash
    python src/demo_ui.py
@@ -154,12 +151,12 @@ A snapshot from the webcam will be saved to `data/test_img/test.jpg`, and annota
 4. Click **Abstract** (right panel) to **extract features**. This will create `data/extract_saved_obj_feature/obj_features.pt`.
 5. Click **Recognize** to run detection/segmentation and show similarity scores per detected region. Results are saved to `data/recognized_results/`.
 
-💡 **Controls**
+💡 **Controls**  
 - **Enter**: confirm the typed object name and start capturing images
 - **Buttons**: `Abstract` (feature extraction), `Recognize` (run recognition), `Exit` (quit)
 - **ESC**: quit (when idle/Waiting)
 
-💡 **Paths & Outputs**
+💡 **Paths & Outputs**  
 - Training images: `data/saved_obj_img/`
 - Extracted features: `data/extract_saved_obj_feature/obj_features.pt`
 - Sample features (preferred if present): `data/sample_features/obj_features.pt`
