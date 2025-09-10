@@ -99,9 +99,8 @@ Choose one of the following modes depending on your preference and use case:
 | `demo_no_ui.py`           | Terminal + webcam      | Batch/one-shot via key commands               | Same `data/` layout (`saved_obj_img/`, `extract_saved_obj_feature/`, etc.) | Lightweight, no GUI |
 | `demo_basic.py`           | Minimal (webcam)       | Basic CLIP similarity example                 | Writes simple outputs under `data/`                              | For quick testing |
 
----
 
-## 📂 Directory Structure
+#### 📂 Directory Structure
 
 ```
 KOBO2023_project/
@@ -133,7 +132,7 @@ KOBO2023_project/
 
 This is the recommended way to run the pipeline interactively with visual feedback. The GUI uses your webcam.
 
-#### Quick Try (no preparation)
+💡 **Quick Try (no preparation)**
 You can try recognition immediately using the bundled sample features:
 
 ```bash
@@ -145,7 +144,7 @@ Then click **Recognize** in the right panel. The app will:
 
 A snapshot from the webcam will be saved to `data/test_img/test.jpg`, and annotated results will be written to `data/recognized_results/`.
 
-#### Register Your Own Objects (optional)
+💡 **Register Your Own Objects (optional)**
 1. Run the GUI:
    ```bash
    python src/demo_ui.py
@@ -155,12 +154,12 @@ A snapshot from the webcam will be saved to `data/test_img/test.jpg`, and annota
 4. Click **Abstract** (right panel) to **extract features**. This will create `data/extract_saved_obj_feature/obj_features.pt`.
 5. Click **Recognize** to run detection/segmentation and show similarity scores per detected region. Results are saved to `data/recognized_results/`.
 
-#### Controls
+💡 **Controls**
 - **Enter**: confirm the typed object name and start capturing images
 - **Buttons**: `Abstract` (feature extraction), `Recognize` (run recognition), `Exit` (quit)
 - **ESC**: quit (when idle/Waiting)
 
-#### Paths & Outputs
+💡 **Paths & Outputs**
 - Training images: `data/saved_obj_img/`
 - Extracted features: `data/extract_saved_obj_feature/obj_features.pt`
 - Sample features (preferred if present): `data/sample_features/obj_features.pt`
