@@ -1,37 +1,42 @@
-### 画像認識技術を活用した冷蔵庫内食材自動判別システムの開発  
-- 情報処理第86回大会 学生奨励賞 受賞作品
-- AI Food Recognizer with [GroundingDINO](https://github.com/IDEA-Research/GroundingDINO?tab=readme-ov-file) + [SAM](https://github.com/facebookresearch/segment-anything) + [CLIP](https://github.com/openai/CLIP)
+# AI Food Recognizer  
+## 画像認識技術を活用した冷蔵庫内食材自動判別システムの開発  
 
-This project is the final work for the elective course **"情報工学工房 (Information Engineering Workshop)"** at **The University of Electro-Communications (電気通信大学)**, under the I-Class curriculum for Information Science students.
-
-🧑‍💼 Theme:  
-**「巨大モデルを使いこなせ！大規模深層学習モデルを活用した画像認識・生成」**  
-("Master the Giant Models! Image Recognition and Generation with Large-Scale Deep Learning Models")
-
-👨‍💻 Authors:  
-- Mengchi Wang (王 孟琪)  
-- Junwen Chen (陳 俊文) – Teaching Assistant  
-- Prof. Keiji Yanai (柳井 啓司) – Faculty Advisor
+- 🏆 情報処理学会 第86回大会 学生奨励賞 受賞作品  
+- Final project for **"情報工学工房 (Information Engineering Workshop)"**, The University of Electro-Communications (電気通信大学)  
 
 ---
 
+## 📹 Demo  
+[![Watch the demo](https://img.youtube.com/vi/WM_rVHsI6sQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=WM_rVHsI6sQ)  
+
+---
+
+## 🧑‍💼 Project Info  
+- **Theme:** 「巨大モデルを使いこなせ！大規模深層学習モデルを活用した画像認識・生成」  
+- **Authors:**  
+  - Mengchi Wang (王 孟琪)  
+  - Junwen Chen (陳 俊文) – Teaching Assistant  
+  - Prof. Keiji Yanai (柳井 啓司) – Faculty Advisor  
+
+---
+
+## 🔍 Overview  
 This project integrates multiple state-of-the-art vision and language models to detect, segment, and recognize food items in images, and optionally fetch their names and calorie information using the OpenAI API.
 
+Models used:  
+- **GroundingDINO** – open-vocabulary object detection with text prompts  
+- **Segment Anything (SAM)** – precise image segmentation  
+- **CLIP** – feature embedding and similarity matching  
+- **OpenAI GPT-4 Vision** (optional) – retrieve food names & calories  
+
+Ideal for:  
+- Food logging  
+- AR food labeling  
+- Diet tracking systems  
+
 ---
 
-🔍 Overview
-
-This pipeline combines:
-- **GroundingDINO** – for open-vocabulary object detection with text prompts  
-- **Segment Anything (SAM)** – for precise image segmentation  
-- **CLIP** – for embedding extracted image regions into a semantic space  
-- **OpenAI GPT-4o API** – to describe the recognized object and return its calorie (optional)
-
-Ideal for building intelligent food loggers, AR food labeling, and diet tracking systems.
-
----
-
-🧠 Architecture
+## 🧠 Architecture  
 
      +----------------+          +---------------------+
      |   Input Image  |  --->    |  GroundingDINO      |
@@ -55,113 +60,79 @@ Ideal for building intelligent food loggers, AR food labeling, and diet tracking
                         (Optional) Call OpenAI GPT-4 API
                         to retrieve object name & calorie
 
+---
 
+## 📌 Features  
+- Text-based object detection (GroundingDINO)  
+- Image segmentation (SAM)  
+- Embedding & similarity search (CLIP)  
+- One-shot recognition with registered features  
+- Optional: API-based food description & calories  
+- Export visual results with bounding boxes & labels  
 
 ---
 
-📌 Features
-- Text-based object detection using GroundingDINO
-- Image segmentation using SAM (Segment Anything)
-- Feature embedding and similarity matching with CLIP
-- Optional: retrieve object description and calories via OpenAI GPT-4 Vision
-- Feature registration and one-shot object recognition
-- Exportable visual results with bounding boxes and labels
+## 🚀 Getting Started  
 
----
-
-🚀 Getting Started
-
-1. Install Dependencies
-
-Install Python dependencies and download model checkpoints for:
-- GroundingDINO
-- SAM (ViT-H)
-- CLIP (ViT-B/32)
-- OpenAI SDK (optional)
-
-```python
+### 1. Installation  
+```bash
+git clone https://github.com/wanaincode/KOBO2023_project.git
+cd KOBO2023_project
 pip install -r requirements.txt
 ```
+Download checkpoints for:  
+- GroundingDINO  
+- SAM (ViT-H)  
+- CLIP (ViT-B/32)  
 
 ---
 
-2. Run as Needed
+### 2. Usage  
 
-Choose the appropriate script depending on your needs:
--  ground_dino_sam_clip.ipynb:
-Interactive notebook for testing the combination of GroundingDINO, SAM, and CLIP.
-- 💻 demo_ver2_without UI.py:
-Terminal-based script. You manually type the object name, extract features, and recognize.
-- demo_ver3_UI.py (Recommended):
-OpenCV GUI-based version that lets you input object names and trigger feature extraction/recognition via buttons.
-- API_get_food_info.py:
-Upload test_item.jpg into the folder, and this script will send it to GPT-4 Vision using your own OpenAI API key to return the food name and calorie.
+Choose one of the following modes depending on your preference and use case:
 
-📂 Directory Structure
-```
-.
-├── GroundingDINO/                # GroundingDINO model & configs
-├── segment-anything/             # SAM model
-├── saved_obj_img/                # Registered training images
-├── extract_saved_obj_feature/    # Feature vectors
-├── test_img/                     # Input test images
-├── recognized_results/           # Prediction result images
-├── main.py                       # Main logic script
-├── demo_ver3_UI.py               # OpenCV UI version
-├── API_get_food_info.py          # OpenAI calorie recognition
-└── requirements.txt
-```
+| Script                  | Interaction Type     | Detection & Recognition                | Output                              | Notes                                    |
+|-------------------------|----------------------|--------------------------------------|-----------------------------------|------------------------------------------|
+| `demo_ui.py` (recommended) | OpenCV GUI with buttons | Real-time detection with GUI controls | Visual output with bounding boxes and labels displayed in window; supports saving results | User-friendly, interactive, supports parameter tuning via GUI |
+| `demo_no_ui.py`          | Terminal-based       | Batch or single image recognition    | Text output in terminal and saved images with annotations | Lightweight, no GUI dependencies          |
+| `demo_basic.py`          | Minimal script       | Basic detection and recognition      | Saves annotated images             | Simplified, for quick testing or integration |
 
 ---
 
-3. Run Recognition
+### 3. Running Recognition with `demo_ui.py` (GUI Version)  
 
-Put test images in test_img/, and run the recognition pipeline:
-```python
-recognize_pipeline(model, predictor, extractor, obj_features, './test_img/example.jpg', box_threshold=0.15, text_threshold=0.15)
-```
-The results will be saved under recognized_results/.
+This is the recommended way to run the recognition pipeline interactively with visual feedback.
 
----
+**Steps:**  
+1. Place your test images in the `./test_img/` directory.  
+2. Run the GUI demo:  
+   ```bash
+   python src/demo_ui.py
+   ```  
+3. The GUI window will open, showing controls and buttons for:  
+   - Loading images  
+   - Adjusting detection thresholds (box and text)  
+   - Running detection and segmentation  
+   - Viewing recognized food items with bounding boxes and labels  
+   - Saving results to `./recognized_results/`  
 
-📂 Directory Structure
-```
-.
-├── GroundingDINO/                # GroundingDINO model & configs
-├── segment-anything/             # SAM model
-├── saved_obj_img/                # Registered training images
-├── extract_saved_obj_feature/    # Feature vectors
-├── test_img/                     # Input test images
-├── recognized_results/           # Prediction result images
-├── main.py                       # Main logic script
-└── utils/                        # (Optional) helper functions
-```
+**Input:**  
+- Images from the `test_img/` folder or loaded via GUI.  
 
----
+**Output:**  
+- Visual display of detected food items with segmentation masks and labels.  
+- Option to save annotated images and recognition results.  
 
-🔑 API Integration (Optional)
+**Controls:**  
+- Buttons for image navigation and detection execution.  
+- Sliders or input fields to adjust detection thresholds dynamically.  
 
-To fetch object name and calorie:
-
-1. Set your OpenAI API key:
-
-```python
-client = OpenAI(api_key="your-api-key")
-```
-
-2. The model sends a base64-encoded cropped image to GPT-4 Vision, requesting name and calorie in a defined format.
+This interactive interface facilitates easy experimentation and visualization without requiring command-line parameter tuning.
 
 ---
 
-📸 Example Results
+## 📄 License  
 
-[![Watch the demo](https://img.youtube.com/vi/WM_rVHsI6sQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=WM_rVHsI6sQ)
-
-> Click the image above to watch a demo on YouTube.
+This project is released under the MIT License.  
 
 ---
-
-📄 License
-
-This project is released under the MIT License.
-
