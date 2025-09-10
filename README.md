@@ -8,7 +8,6 @@
 ### 1.1 デモ  
 [![デモを見る](https://img.youtube.com/vi/WM_rVHsI6sQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=WM_rVHsI6sQ)  
 
----
 
 ### 1.2 プロジェクト情報  
 - **テーマ:** 「巨大モデルを使いこなせ！大規模深層学習モデルを活用した画像認識・生成」  
@@ -17,7 +16,6 @@
   - 陳 俊文 (Junwen Chen) – TAさん  
   - 柳井 啓司 (Prof. Keiji Yanai) – 指導教授  
 
----
 
 ### 1.3 概要  
 本プロジェクトは、最先端の視覚と言語モデルを統合し、画像内の食材を検出・セグメント化・認識し、必要に応じてOpenAI APIで名称やカロリー情報を取得します。
