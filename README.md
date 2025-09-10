@@ -321,5 +321,3 @@ A snapshot from the webcam will be saved under `data/test_img/`, and annotated r
 - Sample features: `data/sample_features/`  
 - Test snapshot: `data/test_img/`  
 - Recognition results: `data/recognized_results/`  
-
----
