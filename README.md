@@ -5,7 +5,7 @@
 - 電気通信大学「情報工学工房」最終プロジェクト
 - 調布祭2023にて展示    
 
-### 1.1 📹 デモ  
+### 1.1 デモ  
 [![デモを見る](https://img.youtube.com/vi/WM_rVHsI6sQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=WM_rVHsI6sQ)  
 
 ---
@@ -170,7 +170,7 @@ KOBO2023_project/
 - Exhibited at Chofu Festival 2023
 
 
-### 1.1 📹 Demo  
+### 1.1 Demo  
 [![Watch the demo](https://img.youtube.com/vi/WM_rVHsI6sQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=WM_rVHsI6sQ)  
 
 ---
