@@ -128,39 +128,33 @@ KOBO2023_project/
 
 This is the recommended way to run the pipeline interactively with visual feedback. The GUI uses your webcam.
 
-#### 💡 Quick Try (no preparation)  
-You can try recognition immediately using the bundled sample features:
+#### 💡 Quick Try  
+You can try recognition immediately using the bundled sample features:  
+- The app will prefer `data/sample_features/obj_features.pt` if present;  
+- Otherwise, it will fall back to `data/extract_saved_obj_feature/obj_features.pt`.  
 
+A snapshot from the webcam will be saved under `data/test_img/`, and annotated results will be written to `data/recognized_results/`.
 
-```bash
-python src/demo_ui.py
-```
-Then click **Recognize** in the right panel. The app will:
-- Prefer `data/sample_features/obj_features.pt` if present;
-- Otherwise fall back to `data/extract_saved_obj_feature/obj_features.pt`.
-
-A snapshot from the webcam will be saved to `data/test_img/test.jpg`, and annotated results will be written to `data/recognized_results/`.
-
-💡 **Register Your Own Objects (optional)**  
+#### 💡 Register Your Own Objects  
 1. Run the GUI:
    ```bash
    python src/demo_ui.py
-   ```
-2. In the bottom input box, type an **object name** (e.g., `apple`) and press **Enter**. The program will capture **3 directions** (`x`, `y`, `z`) and save images under `data/saved_obj_img/<object_name>/`.
-3. Repeat step 2 for more objects.
-4. Click **Abstract** (right panel) to **extract features**. This will create `data/extract_saved_obj_feature/obj_features.pt`.
+   ```  
+2. In the bottom input box, type an **object name** (e.g., `apple`) and press **Enter**. The program will capture **3 directions** (`x`, `y`, `z`) and save images under `data/saved_obj_img/<object_name>/`.  
+3. Repeat step 2 for more objects.  
+4. Click **Abstract** (right panel) to extract features, which will create `data/extract_saved_obj_feature/obj_features.pt`.  
 5. Click **Recognize** to run detection/segmentation and show similarity scores per detected region. Results are saved to `data/recognized_results/`.
 
-💡 **Controls**  
-- **Enter**: confirm the typed object name and start capturing images
-- **Buttons**: `Abstract` (feature extraction), `Recognize` (run recognition), `Exit` (quit)
-- **ESC**: quit (when idle/Waiting)
+#### 💡 Controls  
+- **Enter**: confirm the typed object name and start capturing images  
+- **Buttons**: `Abstract` (feature extraction), `Recognize` (run recognition), `Exit` (quit)  
+- **ESC**: quit (when idle/Waiting)  
 
-💡 **Paths & Outputs**  
-- Training images: `data/saved_obj_img/`
-- Extracted features: `data/extract_saved_obj_feature/obj_features.pt`
-- Sample features (preferred if present): `data/sample_features/obj_features.pt`
-- Test snapshot: `data/test_img/test.jpg`
-- Results: `data/recognized_results/`
+#### 💡 Outputs (summary)  
+- Training images: `data/saved_obj_img/`  
+- Extracted features: `data/extract_saved_obj_feature/`  
+- Sample features: `data/sample_features/`  
+- Test snapshot: `data/test_img/`  
+- Recognition results: `data/recognized_results/`  
 
 ---
