@@ -11,6 +11,20 @@ from torch.nn.functional import cosine_similarity
 from torchvision.ops import box_convert, box_iou
 import matplotlib.pyplot as plt
 
+# ---- paths (use data/ hierarchy) ----
+DATA_DIR = "data"
+DATA_SAVED_OBJ_IMG = osp.join(DATA_DIR, "saved_obj_img")               # registered object images
+DATA_EXTRACTED_FEATS = osp.join(DATA_DIR, "extract_saved_obj_feature") # extracted masks/crops/features
+DATA_TEST_IMG = osp.join(DATA_DIR, "test_img")                         # where test.jpg is saved
+DATA_RECOGNIZED = osp.join(DATA_DIR, "recognized_results")             # recognition result images
+DATA_SAMPLE_FEATURES = osp.join(DATA_DIR, "sample_features")           # optional packaged obj_features.pt
+
+# create directories if missing
+os.makedirs(DATA_SAVED_OBJ_IMG, exist_ok=True)
+os.makedirs(DATA_EXTRACTED_FEATS, exist_ok=True)
+os.makedirs(DATA_TEST_IMG, exist_ok=True)
+os.makedirs(DATA_RECOGNIZED, exist_ok=True)
+
 sys.path.append("./GroundingDINO/")
 sys.path.append("segment-anything")
 from GroundingDINO.groundingdino.util.inference import load_model, load_image, predict, annotate
@@ -34,7 +48,7 @@ press a: obj_idx will add 1
 '''
 
 process_flag = ["Waiting"]
-IMG_NUM_PER_D = 10  
+IMG_NUM_PER_D = 10
 SAVE_DURATION = 20 * IMG_NUM_PER_D * 3 + 5
 SHOW_TIME_BY_FRAME = SAVE_DURATION + 10
 
@@ -58,10 +72,11 @@ def nms(bboxes: torch.Tensor, scores: torch.Tensor, iou_threshold: float) -> tor
     for i in indices:
         if keep[i]:
             bbox = bboxes[order[i]]
-            iou = box_iou(bbox[None,...],(bboxes[order[i + 1:]]) * keep[i + 1:][...,None])
+            iou = box_iou(bbox[None, ...], (bboxes[order[i + 1:]]) * keep[i + 1:][..., None])
             overlapped = torch.nonzero(iou > iou_threshold)
             keep[overlapped + i + 1] = 0
     return order[keep]
+
 
 def getJetColorRGB(v, vmin, vmax):
     c = np.zeros((3))
@@ -70,21 +85,22 @@ def getJetColorRGB(v, vmin, vmax):
     if (v > vmax):
         v = vmax
     dv = vmax - vmin
-    if (v < (vmin + 0.125 * dv)): 
-        c[0] = 256 * (0.5 + (v * 4)) #B: 0.5 ~ 1
+    if (v < (vmin + 0.125 * dv)):
+        c[0] = 256 * (0.5 + (v * 4))  # B: 0.5 ~ 1
     elif (v < (vmin + 0.375 * dv)):
         c[0] = 255
-        c[1] = 256 * (v - 0.125) * 4 #G: 0 ~ 1
+        c[1] = 256 * (v - 0.125) * 4  # G: 0 ~ 1
     elif (v < (vmin + 0.625 * dv)):
-        c[0] = 256 * (-4 * v + 2.5)  #B: 1 ~ 0
+        c[0] = 256 * (-4 * v + 2.5)   # B: 1 ~ 0
         c[1] = 255
-        c[2] = 256 * (4 * (v - 0.375)) #R: 0 ~ 1
+        c[2] = 256 * (4 * (v - 0.375))  # R: 0 ~ 1
     elif (v < (vmin + 0.875 * dv)):
-        c[1] = 256 * (-4 * v + 3.5)  #G: 1 ~ 0
+        c[1] = 256 * (-4 * v + 3.5)   # G: 1 ~ 0
         c[2] = 255
     else:
-        c[2] = 256 * (-4 * v + 4.5) #R: 1 ~ 0.5                      
+        c[2] = 256 * (-4 * v + 4.5)   # R: 1 ~ 0.5
     return c
+
 
 def ground_dino_predict(model, img_path, text_prompt, box_threshold=0.35, text_threshold=0.25, topK=10):
     image_source, image = load_image(img_path)
@@ -105,6 +121,7 @@ def ground_dino_predict(model, img_path, text_prompt, box_threshold=0.35, text_t
     print("Predicted boxes:", boxes.shape[0])
 
     return boxes, logits
+
 
 def sam_predict(predictor, img_path, boxes):
     image = cv2.imread(img_path)
@@ -129,15 +146,20 @@ def sam_predict(predictor, img_path, boxes):
 
     return masks, xyxy, img_rgb
 
+
 def ground_dino_sam_predict(model, predictor, img_path, text_prompt, box_threshold=0.35, text_threshold=0.25):
     boxes, logits = ground_dino_predict(model, img_path, text_prompt, box_threshold, text_threshold)
     masks, boxes, img_rgb = sam_predict(predictor, img_path, boxes)
     return masks, boxes, img_rgb
 
+
 def load_model_and_predict():
-    #Use GroundingDino to detect items.
+    # Use GroundingDINO to detect items.
     print("Loading GroundingDINO model...")
-    model = load_model("GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py", "GroundingDINO/weights/groundingdino_swint_ogc.pth")
+    model = load_model(
+        "GroundingDINO/groundingdino/config/GroundingDINO_SwinT_OGC.py",
+        "GroundingDINO/weights/groundingdino_swint_ogc.pth"
+    )
 
     # Use SAM to generate the mask.
     print("Loading Segment Anything model...")
@@ -145,7 +167,7 @@ def load_model_and_predict():
     model_type = "vit_h"
     device = "cpu"
     sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
-    sam.to(device=device) 
+    sam.to(device=device)
     predictor = SamPredictor(sam)
 
     print("Loading clip ViT-B/32 model...")
@@ -153,8 +175,12 @@ def load_model_and_predict():
 
     return model, predictor, extractor
 
+
 def extract_saved_obj_features(model, predictor, extractor):
-    output_path = "./extract_saved_obj_feature"
+    """Extract features for each object folder under data/saved_obj_img and save to data/extract_saved_obj_feature."""
+    input_path = DATA_SAVED_OBJ_IMG
+    output_path = DATA_EXTRACTED_FEATS
+
     if not osp.exists(output_path):
         os.mkdir(output_path)
     else:
@@ -164,7 +190,7 @@ def extract_saved_obj_features(model, predictor, extractor):
 
     obj_list = [oi for oi in os.listdir(input_path) if not "DS_Store" in oi]
     obj_list.sort()
-    
+
     obj_features = []
 
     for obj_dir in tqdm(obj_list):
@@ -179,19 +205,19 @@ def extract_saved_obj_features(model, predictor, extractor):
             masks, boxes, img_rgb = ground_dino_sam_predict(model, predictor, img_path, TEXT_PROMPT_CAPTURE)
             x1, y1, x2, y2 = boxes[0].cpu().numpy()
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
-            
+
             # mask
             masked_img = img_rgb * masks[0].cpu().numpy().transpose(1, 2, 0)
-            cv2.imwrite(osp.join(output_path, obj_dir, "mask_"+obj), cv2.cvtColor(masked_img, cv2.COLOR_RGB2BGR))
+            cv2.imwrite(osp.join(output_path, obj_dir, "mask_" + obj), cv2.cvtColor(masked_img, cv2.COLOR_RGB2BGR))
 
             # crop and pad to center
             masked_img = masked_img[y1:y2, x1:x2, :]
             h, w, _ = masked_img.shape
             size = max(h, w)
             img_pad = np.zeros((size, size, 3)).astype(np.uint8)
-            img_pad[size//2-h//2:size//2+(h-h//2), size//2-w//2:size//2+(w-w//2)] = masked_img
+            img_pad[size // 2 - h // 2:size // 2 + (h - h // 2), size // 2 - w // 2:size // 2 + (w - w // 2)] = masked_img
             img_pad = cv2.resize(img_pad, (224, 224))
-            cv2.imwrite(osp.join(output_path, obj_dir, "mask_crop_"+obj), cv2.cvtColor(img_pad, cv2.COLOR_RGB2BGR))
+            cv2.imwrite(osp.join(output_path, obj_dir, "mask_crop_" + obj), cv2.cvtColor(img_pad, cv2.COLOR_RGB2BGR))
 
             # normalize
             image = img_pad.astype(np.float32) / 255.
@@ -219,22 +245,22 @@ def extract_saved_obj_features(model, predictor, extractor):
     _set_show_text("Press [r] to recognize test-images.")
     _set_show_text_2("Press [q] to quit.")
     _set_show_text_3("")
-    process_flag[0] = "Waiting" 
+    process_flag[0] = "Waiting"
 
 
 def recognize_pipeline(model, predictor, extractor, obj_features, recognize_img_path, box_threshold=0.35, text_threshold=0.25, idx=0):
     obj_list = obj_features["obj_list"]
     obj_features = obj_features["features"]
-    
+
     if os.path.exists(recognize_img_path):
         print(f"test image: {recognize_img_path}")
-        
-        if not osp.exists(f"recognized_results"):
-            os.mkdir(f"recognized_results")
+
+        # prepare recognized_results under data/
+        if not osp.exists(DATA_RECOGNIZED):
+            os.mkdir(DATA_RECOGNIZED)
         else:
-            # remove all files
-            shutil.rmtree(f"recognized_results")
-            os.mkdir(f"recognized_results")
+            shutil.rmtree(DATA_RECOGNIZED)
+            os.mkdir(DATA_RECOGNIZED)
 
         # ground dino and sam inference
         masks, boxes, img_rgb = ground_dino_sam_predict(model, predictor, recognize_img_path, TEXT_PROMPT_RECOGNIZE, box_threshold, text_threshold)
@@ -244,22 +270,22 @@ def recognize_pipeline(model, predictor, extractor, obj_features, recognize_img_
             x1, y1, x2, y2 = boxi.cpu().numpy()
             x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
 
-            area = (x2-x1) * (y2-y1)
-            if area > 1000*1000:
+            area = (x2 - x1) * (y2 - y1)
+            if area > 1000 * 1000:
                 continue
 
             # mask
             masked_img = img_rgb * maski.cpu().numpy().transpose(1, 2, 0)
-            cv2.imwrite(f"./recognized_results/mask_{obj_idx}.jpg", cv2.cvtColor(masked_img, cv2.COLOR_RGB2BGR))
+            cv2.imwrite(osp.join(DATA_RECOGNIZED, f"mask_{obj_idx}.jpg"), cv2.cvtColor(masked_img, cv2.COLOR_RGB2BGR))
 
             # crop and pad to center
             masked_img = masked_img[y1:y2, x1:x2, :]
             h, w, _ = masked_img.shape
             size = max(h, w)
             img_pad = np.zeros((size, size, 3)).astype(np.uint8)
-            img_pad[size//2-h//2:size//2+(h-h//2), size//2-w//2:size//2+(w-w//2)] = masked_img
+            img_pad[size // 2 - h // 2:size // 2 + (h - h // 2), size // 2 - w // 2:size // 2 + (w - w // 2)] = masked_img
             img_pad = cv2.resize(img_pad, (224, 224))
-            cv2.imwrite(f"./recognized_results/mask_crop_{obj_idx}.jpg", cv2.cvtColor(img_pad, cv2.COLOR_RGB2BGR))
+            cv2.imwrite(osp.join(DATA_RECOGNIZED, f"mask_crop_{obj_idx}.jpg"), cv2.cvtColor(img_pad, cv2.COLOR_RGB2BGR))
 
             # normalize
             image = img_pad.astype(np.float32) / 255.
@@ -291,33 +317,37 @@ def recognize_pipeline(model, predictor, extractor, obj_features, recognize_img_
             y1_t = y1
             for rti_idx, rti in enumerate(res_text):
                 if not rti_idx == max_score_idx:
-                    cv2.putText(img_rgb_copy, rti, (x1+6, y1_t+40), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2)
+                    cv2.putText(img_rgb_copy, rti, (x1 + 6, y1_t + 40), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 255), 2)
                 else:
-                    cv2.putText(img_rgb_copy, rti, (x1+6, y1_t+40), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
+                    cv2.putText(img_rgb_copy, rti, (x1 + 6, y1_t + 40), cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
                 y1_t += 40
             cv2.rectangle(img_rgb_copy, (x1, y1), (x2, y2), (0, 0, 255), 2)
-        
-        cv2.imwrite(f"./recognized_results/res_{box_threshold}_{text_threshold}.jpg", cv2.cvtColor(img_rgb_copy, cv2.COLOR_RGB2BGR))
+
+        cv2.imwrite(osp.join(DATA_RECOGNIZED, f"res_{box_threshold}_{text_threshold}.jpg"), cv2.cvtColor(img_rgb_copy, cv2.COLOR_RGB2BGR))
         img_bgr_copy = cv2.cvtColor(img_rgb_copy, cv2.COLOR_RGB2BGR)
         a[0] = img_bgr_copy.copy()
         print("Recognizition finished.")
     else:
         print("No test image")
-    
+
     process_flag[0] = "Waiting"
     _set_show_text("Press [s] to capture more objects' images.")
     _set_show_text_2("Press [r] to recognize again.")
     _set_show_text_3("Press [q] to quit.")
 
+
 def _set_show_text(text):
     show_text[0] = text
     show_text[1] = SHOW_TIME_BY_FRAME
 
+
 def _set_show_text_2(text):
     show_text_2[0] = text
 
+
 def _set_show_text_3(text):
     show_text_3[0] = text
+
 
 # load mode
 print("Loading model...")
@@ -331,7 +361,8 @@ cv2.moveWindow("window", 100, 250)
 
 # use webcam
 print("Open camera...")
-cap = cv2.VideoCapture(1)
+# Use camera index 0 by default; change to 1 if you have an external camera
+cap = cv2.VideoCapture(0)
 
 image_num = 0
 obj_idx = 0
@@ -344,6 +375,10 @@ while True:
     ret, frame = cap.read()
     if ret:
         frame_copy = frame.copy()
+    else:
+        # If no frame captured, continue trying (or break if preferred)
+        continue
+
     # show process flag on right top of the window
     cv2.putText(frame_copy, process_flag[0], (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     # show action flag below process flag
@@ -355,19 +390,17 @@ while True:
         show_text[1] -= 1
         cv2.putText(frame_copy, show_text[0], (250, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-
-    #object image path
-    input_path = "./saved_obj_img/"
-    if not osp.exists(input_path):
-        os.mkdir(input_path)
+    # object image path
+    input_path = DATA_SAVED_OBJ_IMG
+    os.makedirs(input_path, exist_ok=True)
 
     if save_meta["save_duration"] > 0 and i <= 2:
         save_meta["save_duration"] -= 1
 
         obj_path = osp.join(input_path, f"{obj_name[obj_idx]}")
         if not osp.exists(obj_path):
-            os.mkdir(obj_path)        
-        
+            os.mkdir(obj_path)
+
         if save_meta["save_duration"] % (20 * IMG_NUM_PER_D) == 0:
             print(f"Starting caputuring {IMG_NUM_PER_D} pictures of {direction[i]} direction")
         if save_meta["save_duration"] % save_meta["save_frame_gap"] == 0:
@@ -400,14 +433,14 @@ while True:
 
     # if key is 's' pressed, save image
     if key == ord("s") and save_meta["save_duration"] <= 0:
-        user_input = input(f"Enter the name of object {obj_idx+1}: ")
+        user_input = input(f"Enter the name of object {obj_idx + 1}: ")
         obj_name.append(user_input)
-        _set_show_text(f"Capturing {IMG_NUM_PER_D * 3} images of {obj_name[obj_idx]} in {SAVE_DURATION-5} frames.")
+        _set_show_text(f"Capturing {IMG_NUM_PER_D * 3} images of {obj_name[obj_idx]} in {SAVE_DURATION - 5} frames.")
         _set_show_text_2(" ")
         _set_show_text_3(" ")
         process_flag[0] = "Running"
         save_meta["save_duration"] = SAVE_DURATION
-   
+
     # if key is 'a' pressed, start a new process to extract the feature of saved images
     if key == ord("a") and process_flag[0] == "Waiting":
         _set_show_text(" ")
@@ -417,15 +450,33 @@ while True:
         thread = threading.Thread(target=extract_saved_obj_features, args=(model, predictor, extractor))
         thread.start()
 
-    # if ket is 'r' pressed, excute clip_test.
-    if key == ord("r") and process_flag[0] == "Waiting": 
+    # if key is 'r' pressed, execute recognition
+    if key == ord("r") and process_flag[0] == "Waiting":
         _set_show_text("Test-image was captured. Please wait for recognized result.")
         _set_show_text_2(" ")
         _set_show_text_3(" ")
         process_flag[0] = "Recognizing"
-        obj_features = torch.load("./extract_saved_obj_feature/obj_features.pt")
-        cv2.imwrite("./test_img/test.jpg", frame)
-        thread = threading.Thread(target=recognize_pipeline, args=(model, predictor, extractor, obj_features, f"./test_img/test.jpg", 0.15, 0.15))
+
+        # prefer sample features if present; fallback to freshly extracted features
+        sample_feat_path = osp.join(DATA_SAMPLE_FEATURES, "obj_features.pt")
+        extracted_feat_path = osp.join(DATA_EXTRACTED_FEATS, "obj_features.pt")
+        feat_path = sample_feat_path if osp.exists(sample_feat_path) else extracted_feat_path
+
+        if not osp.exists(feat_path):
+            print("Feature file not found. Please run 'a' to extract features first.")
+            process_flag[0] = "Waiting"
+            continue
+
+        obj_features = torch.load(feat_path)
+
+        # save current test image
+        test_img_path = osp.join(DATA_TEST_IMG, "test.jpg")
+        cv2.imwrite(test_img_path, frame)
+
+        thread = threading.Thread(
+            target=recognize_pipeline,
+            args=(model, predictor, extractor, obj_features, test_img_path, 0.15, 0.15)
+        )
         thread.start()
 
 cv2.destroyAllWindows()
