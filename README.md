@@ -1,17 +1,16 @@
 # 画像認識技術を活用した冷蔵庫内食材自動判別システムの開発   
-## Abstract
+## 1. Intro
 
 - 🏆 情報処理学会 第86回大会 学生奨励賞 受賞作品  
 - Final project for **"情報工学工房 (Information Engineering Workshop)"**, The University of Electro-Communications (電気通信大学)  
 
----
 
-## 📹 Demo  
+### 1.1 📹 Demo  
 [![Watch the demo](https://img.youtube.com/vi/WM_rVHsI6sQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=WM_rVHsI6sQ)  
 
 ---
 
-## 🧑‍💼 Project Info  
+### 1.2 🧑‍💼 Project Info  
 - **Theme:** 「巨大モデルを使いこなせ！大規模深層学習モデルを活用した画像認識・生成」  
 - **Authors:**  
   - Mengchi Wang (王 孟琪)  
@@ -20,7 +19,7 @@
 
 ---
 
-## 🔍 Overview  
+### 1.3 🔍 Overview  
 This project integrates multiple state-of-the-art vision and language models to detect, segment, and recognize food items in images, and optionally fetch their names and calorie information using the OpenAI API.
 
 Models used:  
@@ -36,7 +35,7 @@ Ideal for:
 
 ---
 
-## 🧠 Architecture  
+## 2. Architecture  
 
      +----------------+          +---------------------+
      |   Input Image  |  --->    |  GroundingDINO      |
@@ -60,9 +59,9 @@ Ideal for:
                         (Optional) Call OpenAI GPT-4 API
                         to retrieve object name & calorie
 
----
 
-## 📌 Features  
+
+### 2.1 🔍 Key Features
 - Text-based object detection (GroundingDINO)  
 - Image segmentation (SAM)  
 - Embedding & similarity search (CLIP)  
@@ -72,9 +71,9 @@ Ideal for:
 
 ---
 
-## 🚀 Getting Started  
+## 3. Getting Started  
 
-### 1. Installation  
+### 3.1 Installation  
 ```bash
 git clone https://github.com/wanaincode/KOBO2023_project.git
 cd KOBO2023_project
@@ -88,7 +87,7 @@ Download checkpoints for:
 All scripts expect read/write under `data/` (created automatically on first run).
 
 
-### 2. Usage  
+### 3.2 Usage  
 
 Choose one of the following modes depending on your preference and use case:
 
@@ -125,12 +124,13 @@ KOBO2023_project/
 
 > Note: If you are running scripts directly from the repo root (not using `src/`), adjust the command accordingly (e.g., `python demo_ui.py`). All I/O paths are under the `data/` directory.
 
-### 3. Running Recognition with `demo_ui.py` (GUI Version)
+### 3.3 Running Recognition with `demo_ui.py` (GUI Version)
 
 This is the recommended way to run the pipeline interactively with visual feedback. The GUI uses your webcam.
 
-💡 **Quick Try (no preparation)**  
+#### 💡 Quick Try (no preparation)  
 You can try recognition immediately using the bundled sample features:
+
 
 ```bash
 python src/demo_ui.py
