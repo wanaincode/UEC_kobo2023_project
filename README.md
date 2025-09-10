@@ -10,7 +10,7 @@
 
 ---
 
-### 1.2 🧑‍💼 Project Info  
+### 1.2 Project Info  
 - **Theme:** 「巨大モデルを使いこなせ！大規模深層学習モデルを活用した画像認識・生成」  
 - **Authors:**  
   - Mengchi Wang (王 孟琪)  
@@ -19,7 +19,7 @@
 
 ---
 
-### 1.3 🔍 Overview  
+### 1.3 Overview  
 This project integrates multiple state-of-the-art vision and language models to detect, segment, and recognize food items in images, and optionally fetch their names and calorie information using the OpenAI API.
 
 Models used:  
@@ -61,7 +61,7 @@ Ideal for:
 
 
 
-### 2.1 🔍 Key Features
+### 2.1 Key Features
 - Text-based object detection (GroundingDINO)  
 - Image segmentation (SAM)  
 - Embedding & similarity search (CLIP)  
@@ -98,7 +98,7 @@ Choose one of the following modes depending on your preference and use case:
 | `demo_basic.py`           | Minimal (webcam)       | Basic CLIP similarity example                 | Writes simple outputs under `data/`                              | For quick testing |
 
 
-#### 📂 Directory Structure
+#### Directory Structure
 
 ```
 KOBO2023_project/
