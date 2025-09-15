@@ -3,7 +3,7 @@
 
 - 🏆 情報処理学会 第86回大会 学生奨励賞 受賞作品  
 - 電気通信大学「情報工学工房」最終プロジェクト
-- 調布祭2023にて展示    
+- 調布祭2023に展示    
 
 ### 1.1 デモ  
 [![デモを見る](https://img.youtube.com/vi/WM_rVHsI6sQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=WM_rVHsI6sQ)  
